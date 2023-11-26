@@ -1,0 +1,60 @@
+(*let file = "input.txt";;
+
+let read_lines_all () = 
+        let content = In_channel.with_open_text file In_channel.input_all in
+        String.split_on_char '\n' content ;; *)
+
+(*let group_and_sum lst = 
+        let rec group acc current = function
+                | [] -> List.rev current :: acc
+                | "\n" :: t -> group (current :: acc) [] t
+                | h :: t -> group acc (h :: current) t
+        in
+        let groups = group [] [] lst in 
+        let sum_group g =
+                List.fold_left (fun acc s -> 
+                        print_endline s;
+                        acc + int_of_string s) 0 g
+        in
+        List.map sum_group groups *)
+
+let find_max lst =
+        match lst with
+        | [] -> None
+        | hd :: tl -> Some(List.fold_left max hd tl)
+
+(*let process_strings lst =
+        let summed_groups = group_and_sum lst in
+        find_max summed_groups *)
+
+let sum_of_numbers_in_line line =
+        try
+                int_of_string line
+        with Failure _ -> 0
+
+let sum_by_lines file = 
+        let in_channel = open_in file in 
+        let rec aux acc current = 
+                match input_line in_channel with
+                | line when line = "" -> aux (current :: acc) 0
+                | line -> aux acc ( current + sum_of_numbers_in_line line)
+                | exception End_of_file -> close_in in_channel; List.rev( current :: acc)
+        in
+        aux [] 0
+
+let process_file filename =
+        let summed_groups = sum_by_lines filename in
+        find_max summed_groups
+
+let () = 
+        let filename = "input.txt" in
+        match process_file filename with
+        | Some sum -> Printf.printf "%d\n" sum
+        | None -> Printf.printf "List was empty"
+
+
+
+
+
+
+

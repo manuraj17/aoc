@@ -1,0 +1,25 @@
+let file = "input.txt";;
+
+let read_lines_all () = 
+        let content = In_channel.with_open_text file In_channel.input_all in
+        String.split_on_char '\n' content ;;
+
+let print_lines lines = List.iter (fun line -> print_endline line) lines ;;
+
+let process_lines lines = print_lines lines ;;
+
+
+let () = 
+        let content = In_channel.with_open_text file In_channel.input_all in
+        let lines = String.split_on_char '\n content in
+        let start = 0 in
+        let imap = IMap.empty in
+        (* Iterate through each element *)
+        let result = List.fold_left (fun v IMap.empty -> if v = '\n' then start = start + 1 else ac
+        
+(* let () = read_lines_all () |> process_lines ;; *)
+
+
+
+
+
