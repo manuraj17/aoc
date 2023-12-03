@@ -1,0 +1,92 @@
+let number_words =
+  [ "one"; "two"; "three"; "four"; "five"; "six"; "seven"; "eight"; "nine" ]
+
+let map_numbers = function
+  | "one" -> "1"
+  | "two" -> "2"
+  | "three" -> "3"
+  | "four" -> "4"
+  | "five" -> "5"
+  | "six" -> "6"
+  | "seven" -> "7"
+  | "eight" -> "8"
+  | "nine" -> "9"
+  | other -> other
+
+let map_number = map_numbers
+
+(* let regex_pattern_1 = Str.regexp "[1-9]" *)
+
+let regex_pattern_2 =
+  let number_word_pattern = String.concat "\\|" number_words in
+  Str.regexp ("[1-9]\\|" ^ number_word_pattern)
+
+let get_first_number line regex =
+  match Str.search_forward regex line 0 with
+  | _ -> map_number (Str.matched_string line)
+  | exception Not_found -> ""
+
+let get_last_number line regex =
+  match Str.search_backward regex line (String.length line - 1) with
+  | _ -> map_number (Str.matched_string line)
+  | exception Not_found -> ""
+
+let get_first_and_last line =
+  let first = get_first_number line regex_pattern_2 in
+  let last = get_last_number line regex_pattern_2 in
+  first ^ last
+
+let get_numbers_from_line line =
+  let number_word_pattern = String.concat "|" number_words in
+  let regex_pattern = "(" ^ "\\d" ^ "|" ^ number_word_pattern ^ ")" in
+  let re = Re2.create_exn regex_pattern in
+  let matches = Re2.find_all_exn re line in
+  List.map (fun x -> map_numbers x) matches
+
+let get_first_and_last_2 list =
+  (* let _ = print_endline "" in *)
+  (* let _ = List.iter (fun x -> Printf.printf "%s\n" x) list in *)
+  let first_char = List.nth list 0 in
+  let result = first_char ^ List.nth list (List.length list - 1) in
+  result
+
+let sum_by_lines_2 file =
+  In_channel.with_open_text file (fun in_channel ->
+      let rec aux acc =
+        match In_channel.input_line in_channel with
+        | Some line ->
+          aux (get_first_and_last_2 (get_numbers_from_line line) :: acc)
+        | None -> acc
+      in
+      aux [])
+
+let rec cmp l ll count =
+  match (l, ll) with
+  | [], [] -> 0
+  | [], _ -> -1
+  | _, [] -> 1
+  | h :: t, hh :: tt -> 
+    if int_of_string h !=  int_of_string hh then (Printf.printf "Wrong: %d:%d:%d\n" (int_of_string h)(int_of_string hh) count; exit 0) else (print_endline (string_of_int count); cmp t tt (count+1))
+
+
+let sum_by_lines file =
+  In_channel.with_open_text file (fun in_channel ->
+      let rec aux acc =
+        match In_channel.input_line in_channel with
+        | Some line ->
+          aux (get_first_and_last line :: acc)
+        | None -> acc
+      in
+      aux [])
+
+let compare_results filename = 
+  let result_1 = sum_by_lines filename in
+  let result_2 = sum_by_lines_2 filename in
+  (* let rmap1 = List.map (fun i -> int_of_string i) result_1 in *)
+  (* let rmap2 = List.map (fun i -> int_of_string i) result_2 in *)
+  let _ = cmp result_1 result_2 1 in
+  print_endline "Done\n"
+
+let () =
+  let filename = "input.txt" in
+  compare_results filename

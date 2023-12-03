@@ -1,0 +1,32 @@
+let get_numbers_from_line line =
+  let re = Re2.create_exn "\\d" in
+  let matches = Re2.find_all_exn re line in
+  let concat = List.fold_left ( ^ ) "" in
+  concat matches
+
+let get_first_and_last inp = 
+  let first_char = String.make 1 inp.[0] in
+  let slen = String.length inp in
+  match slen with
+  | 1 -> first_char ^ first_char
+  | _ -> first_char ^ String.make 1 inp.[slen-1]
+
+let sum_by_lines file =
+  In_channel.with_open_text file (fun in_channel ->
+      let rec aux acc =
+        match In_channel.input_line in_channel with
+        | Some line -> aux (get_first_and_last (get_numbers_from_line line) :: acc)
+        | None -> acc
+      in
+      aux [])
+
+let process_file filename =
+  let result = sum_by_lines filename in
+  let sum = List.fold_left ( + ) 0 in
+  let mapped = List.map (fun i -> int_of_string i) result in
+  sum mapped
+
+let () =
+  let filename = "input.txt" in
+  let result = process_file filename in
+  print_endline (string_of_int result)

@@ -1,0 +1,4 @@
+(test
+ (name day01))
+ (cram
+   (deps ../_build/install/default/bin/day01))
