@@ -16,7 +16,7 @@ func fail(err error) {
 	}
 }
 
-func day01(name string) int {
+func part01(name string) int {
 	f, err := os.Open(name)
 	fail(err)
 	defer f.Close()
@@ -57,7 +57,7 @@ func day01(name string) int {
 	return sum
 }
 
-func day02(name string) int {
+func part02(name string) int {
 	f, err := os.Open(name)
 	fail(err)
 	defer f.Close()
@@ -111,6 +111,6 @@ func day02(name string) int {
 }
 
 func main() {
-	fmt.Println(day01("inp1.txt"))
-	fmt.Println(day02("inp1.txt"))
+	fmt.Println(part01("inp1.txt"))
+	fmt.Println(part02("inp1.txt"))
 }
